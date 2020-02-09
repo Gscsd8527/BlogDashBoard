@@ -1,0 +1,25 @@
+.logo{
+    width: 50px;
+    height: 50px;
+}
+div.navbar-header{
+    margin-top: 0px;
+    margin-right: 50px;
+    border: none;
+}
+div.navbar-header a{
+    margin-right: 50px;
+}
+.main{
+    background: #fff;
+    width: 730px;
+    margin: 0 auto;
+    margin-top: 50px;
+    margin-bottom: 500px;
+    overflow: hidden;
+    padding: 10px;
+}
+.nar{
+    border: 1px solid red;
+    height: 100%;
+}
