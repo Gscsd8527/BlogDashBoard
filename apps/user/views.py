@@ -9,7 +9,11 @@ def Index(request):
     :param request:
     :return:
     """
-    return render(request, 'index.html', context={'user': None})
+    questions =  ArticlePost.objects.all().order_by('-create_time')
+    user = request.user
+    if not isinstance(user, str):  # 默认的不是字符串，而是匿名用户，不是字符串类型
+       user = None
+    return render(request, 'index.html', context={'user': user, 'questions': questions})
 
 def Login(request):
     """
@@ -124,3 +128,21 @@ def WriteBlog(request):
         return render(request, 'user/myblog.html', {'questions': questions})
 
 
+def Detail(request):
+    """
+    显示文章详情
+    :param request:
+    :return:
+    """
+    question_id = request.GET.get('question_id', 1)
+    question = ArticlePost.objects.filter(id=question_id).first()
+    return render(request, 'user/detail.html', context={'question': question})
+
+def AddComment(request):
+    """
+    添加评论
+    :param request:
+    :return:
+    """
+    if request.method == 'POST':
+        content = request.POST.get('comment')

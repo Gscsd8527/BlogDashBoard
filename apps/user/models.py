@@ -36,3 +36,9 @@ class ArticlePost(models.Model):
     updated = models.DateTimeField(auto_now=True)
     # 文章作者。参数on_delete用于指定数据删除的方式，避免两个关联表的数据不一致。
     author = models.ForeignKey(User, on_delete=models.CASCADE)
+
+class CommentModel(models.Model):
+    content = models.TextField(verbose_name="评论", null=False, blank=False)
+    question_id = models.ForeignKey(ArticlePost, verbose_name="文章的id", on_delete=models.CASCADE)
+    author_id = models.ForeignKey(User, verbose_name="谁评论的", on_delete=False)
+

@@ -1,6 +1,28 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 {% block title %}首页{% endblock %}
 
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/showblog.css' %}">
+{% endblock %}
+
 {% block main %}
-    hello
+    <ul class="question-list-group">
+        {% for question in questions %}
+            <li>
+                <div class="avatar-group">
+                    <img src="{% static 'images/index.png' %}" alt="" class="avatar">
+                </div>
+                <div class="question-group">
+{#                    <p class="question-title">{{ question.title }}</p>#}
+                    <p class="question-title"><a href="/detail/?question_id={{ question.id }}">{{ question.title }}</a></p>
+                    <p class="question-content">{{ question.content }}</p>
+                    <div class="question-info">
+                        <span class="question-author">{{ question.author.username }}</span>
+                        <span class="question-time">{{ question.create_time }}</span>
+                    </div>
+                </div>
+            </li>
+        {% endfor %}
+    </ul>
 {% endblock %}
