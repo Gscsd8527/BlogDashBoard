@@ -39,6 +39,10 @@ class ArticlePost(models.Model):
 
 class CommentModel(models.Model):
     content = models.TextField(verbose_name="评论", null=False, blank=False)
+    likes = models.IntegerField(u'顶', default=0)
+    # user_likes = models.ManyToManyField(User,verbose_name='点赞的人', related_name='comments_liked')
+    # comments = GenericRelation('Comment') # 自己对自己的评论, 也就是评论的回复
+    create_time = models.DateTimeField(default=timezone.now, verbose_name="创建时间")
     question_id = models.ForeignKey(ArticlePost, verbose_name="文章的id", on_delete=models.CASCADE)
     author_id = models.ForeignKey(User, verbose_name="谁评论的", on_delete=False)
 

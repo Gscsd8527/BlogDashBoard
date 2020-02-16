@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, reverse
-from .models import User, ArticlePost
+from .models import User, ArticlePost, CommentModel
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, login
 
@@ -11,8 +11,10 @@ def Index(request):
     """
     questions =  ArticlePost.objects.all().order_by('-create_time')
     user = request.user
-    if not isinstance(user, str):  # 默认的不是字符串，而是匿名用户，不是字符串类型
-       user = None
+    # print(user, type(user))
+    # print(user.username, type(user.username), len(user.username))
+    if not len(user.username):
+        user = None
     return render(request, 'index.html', context={'user': user, 'questions': questions})
 
 def Login(request):
@@ -42,10 +44,10 @@ def Login(request):
             user = User.objects.filter(username=username, password=password).first()
             if user is not None:
                 login(request, user)
-                # print(next_url)
                 if next_url:
                     return redirect(next_url, context={'user': user})
-                return render(request, 'index.html', context={'user': user})
+                questions = ArticlePost.objects.all().order_by('-create_time')
+                return render(request, 'index.html', context={'user': user, 'questions': questions})
             else:
                 return render(request, 'user/login.html', context={'error_msg': '用户名密码不存在，请先注册'})
 
@@ -134,10 +136,16 @@ def Detail(request):
     :param request:
     :return:
     """
+    user = request.user
+    if not len(user.username):
+        user = None
     question_id = request.GET.get('question_id', 1)
+    request.session['question_id'] = question_id
     question = ArticlePost.objects.filter(id=question_id).first()
-    return render(request, 'user/detail.html', context={'question': question})
+    Comment = CommentModel.objects.filter(question_id=question).order_by('-create_time')
+    return render(request, 'user/detail.html', context={'user': user, 'question': question, 'Comment': Comment})
 
+@login_required
 def AddComment(request):
     """
     添加评论
@@ -146,3 +154,24 @@ def AddComment(request):
     """
     if request.method == 'POST':
         content = request.POST.get('comment')
+        post_id = request.POST.get('post_id')
+        # print('content = ', content)
+        # print('post_id = ', post_id)
+        user = request.user
+        Comment = CommentModel()
+        Comment.content = content
+        Comment.question_id = ArticlePost.objects.filter(pk=post_id)[0]
+        Comment.author_id = User.objects.filter(username=user)[0]
+        Comment.save()
+        # 评论完成还是当前页面
+        question = ArticlePost.objects.filter(id=post_id).first()
+
+        Comment = CommentModel.objects.filter(question_id=question).order_by('-create_time')
+        return render(request, 'user/detail.html', context={'question': question, 'user': user, 'Comment': Comment})
+    else:
+        user = request.user
+        question_id = request.session['question_id']
+        question = ArticlePost.objects.filter(pk=question_id).first()
+        return render(request, 'user/detail.html', context={'question': question, 'user': user})
+
+

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import Index, Login, Register, Logout, MyBlog, WriteBlog, Detail
+from .views import Index, Login, Register, Logout, MyBlog, WriteBlog, Detail, AddComment
 app_name = 'user'
 
 urlpatterns = [
@@ -10,4 +10,5 @@ urlpatterns = [
     path('myblog/', MyBlog, name='myblog'),
     path('writeblog/', WriteBlog, name='writeblog'),
     path('detail/', Detail, name='detail'),
+    path('addcomment/', AddComment, name='addcomment'),
 ]

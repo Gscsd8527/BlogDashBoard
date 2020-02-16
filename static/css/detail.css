@@ -10,3 +10,34 @@
 .question-conteat{
     text-align: center;
 }
+
+.comment-list{
+    padding-left: 0;
+}
+
+.comment-list li{
+    list-style: none;
+    border-bottom: 1px solid #eee;
+}
+.head-prot{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+.user-info{
+    font-size: 16px;
+    color: #9b9b9b;
+    line-height: 40px;
+}
+
+.user-info .username{
+    margin-left: 20px;
+}
+
+.user-info .create-time{
+    float: right;
+}
+
+.content{
+    margin-left: 60px;
+}
